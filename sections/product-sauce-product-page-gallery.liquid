@@ -1,0 +1,80 @@
+{% comment %} product-sauce-product-page-gallery {% endcomment %}
+
+{%- if section.settings.sauce-ppg-enabled  -%}
+<div class='snpt-wdgt--ppg'>
+  <section class="snptsauce-section wide-container section-spacing"> 
+    <style>
+      .snpt-wdgt--ppg {
+        background-color: {{ section.settings.bg_color }};
+        padding-top: 20px;
+        padding-bottom: 20px;
+      }
+      .snpt-wdgt--ppg .s-usr-snptwdgt-header {
+        margin-bottom: 5px;
+      }
+      .snpt-wdgt--ppg .section-heading,
+      .snpt-wdgt--ppg .section-subheading{
+        color: {{ section.settings.txt_color }};
+      }
+    </style>
+    
+    <div class="">
+      <header class="s-usr-snptwdgt-header align-center">
+        {%- if section.settings.heading != blank -%}
+        <h2 class="h2 section-heading">{{ section.settings.heading | escape }}</h2>
+        {% endif %}
+        {% if section.settings.subheading != blank%}
+          <span class="section-subheading">{{ section.settings.subheading | escape }}</span>
+        {% endif %}
+      </header>
+      
+      <script async src='https://snapppt.com/widgets/ppg/2266eb93-9243-4324-a84c-8e6df82566b4' class='snapppt-widget' imnportance='high'></script>
+    </div>
+  </section>
+</div>
+{%- endif -%}
+
+{% schema %}
+  {
+    "name": "Sauce Product Page embed",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Sauce Product Page Gallery"
+      }, 
+      {
+        "type": "checkbox",
+        "id": "sauce-ppg-enabled",
+        "label": "Enable",
+        "default": true 
+      },
+      {
+        "type": "text",
+        "id": "heading",
+        "default": "@the_loom_collection on Instagram",
+        "label": "Title"
+      }, {
+        "type": "text",
+        "id": "subheading",
+        "default": "Tag #TLCstyle @the_loom_collection for a chance to be featured",
+        "label": "Subtitle"
+      }, {
+        "type": "color",
+        "id": "bg_color",
+        "label": "Background color",
+        "default": "transparent"
+      }, {
+        "type": "color",
+        "id": "txt_color",
+        "label": "Header color",
+        "default": "#FFF"
+      }
+	]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

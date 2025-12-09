@@ -1,0 +1,134 @@
+<style>
+  .meta-collapsible-tabs .collapsible-tabs__heading{
+    text-align: center;
+  }
+</style>
+{% if product.metafields.custom.product_faq != blank %}
+{%- assign productfaq = product.metafields.custom.product_faq.value  -%}
+{%- assign faqvalue = productfaq.product-faq  -%}
+<div data-section-type="meta-collapsible-tabs" data-components="accordion" data-cc-animate>
+  <div class="container">
+    <div class="collapsible-tabs meta-collapsible-tabs">
+      {% if section.settings.title != blank %}
+        <h2 class="collapsible-tabs__heading collapsible-tabs__content" id="faq-{{ section.settings.title | handle }}">{{ section.settings.title | escape }}</h2>
+      {% endif %}
+
+      {% capture accordion_content %}
+        
+        {%- for list in faqvalue -%}
+          <div class="collapsible-tabs__block" {{ block.shopify_attributes }}>
+              <div class="collapsible-tabs__tab">
+                {% render 'accordion-item',
+                    title:  list.question,
+                    escape_title: true,
+                    content:  list.answer,
+                    add_content_class: 'rte',
+                    item_open: false
+                %}
+              </div>
+          </div>
+        {%- endfor -%}
+      
+      {% endcapture %}
+      {%
+        render "accordion",
+          allow_multi_open: false,
+          content: accordion_content
+      %}
+    </div>
+  </div>
+</div>
+{% else %}
+
+<div data-section-type="meta-collapsible-tabs" data-components="accordion" data-cc-animate>
+  <div class="container">
+    <div class="collapsible-tabs meta-collapsible-tabs">
+      {% if section.settings.title != blank %}
+        <h2 class="collapsible-tabs__heading collapsible-tabs__content" id="faq-{{ section.settings.title | handle }}">{{ section.settings.title | escape }}</h2>
+      {% endif %}
+
+      {% capture accordion_content %}
+        {%- for block in section.blocks -%}
+          <div class="collapsible-tabs__block" {{ block.shopify_attributes }}>
+            {% if block.type == 'content' %}
+              <div class="collapsible-tabs__text collapsible-tabs__content rte">{{ block.settings.content }}</div>
+
+            {% elsif block.type == 'button' %}
+              <div class="collapsible-tabs__button collapsible-tabs__content">
+                <a class="btn btn--primary btn--link" href="{{ block.settings.link }}"><span class="btn__text">{{ block.settings.title | escape }}</span></a>
+              </div>
+
+            {% elsif block.type == 'question' %}
+              <div class="collapsible-tabs__tab">
+                {% render 'accordion-item',
+                    title: block.settings.title,
+                    escape_title: true,
+                    content: block.settings.answer,
+                    add_content_class: 'rte',
+                    item_open: false
+                %}
+              </div>
+            {% endif %}
+          </div>
+        {%- endfor -%}
+      {% endcapture %}
+      {%
+        render "accordion",
+          allow_multi_open: false,
+          content: accordion_content
+      %}
+    </div>
+  </div>
+</div>
+  
+{% endif %}
+
+{% schema %}
+  {
+    "name": "Meta Collapsible tabs",
+    "class": "section-collapsible-tabs",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Collapsible tabs"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "question",
+        "name": "Question",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Question",
+            "default": "Question"
+          },
+          {
+            "type": "richtext",
+            "id": "answer",
+            "label": "Answer",
+            "default": "<p>Answer</p>"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Meta Collapsible tabs",
+        "settings": {},
+        "blocks": [
+          {
+            "type": "question"
+          },
+          {
+            "type": "question"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}
+

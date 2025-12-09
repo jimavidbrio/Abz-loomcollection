@@ -1,0 +1,74 @@
+{% if section.blocks.size > 0 %}
+<section class="home-collections">
+  <div class="container">
+    <div class="collection-grid">
+
+      {% for block in section.blocks %}
+        <a href="{{ block.settings.link }}" class="collection-card" {{ block.shopify_attributes }}>
+          {% if block.settings.image != blank %}
+            <img src="{{ block.settings.image | img_url : "" }}" alt="{{ block.settings.title }}">
+          {% endif %}
+          <h3 class="card_title">{{ block.settings.title }}
+            <svg xmlns="http://www.w3.org/2000/svg" width="19" height="32" viewBox="0 0 19 32"><path fill="currentColor" d="M16.799 15.201c.441.441.441 1.156 0 1.597s-1.156.441-1.597 0L1.226 2.822c-.441-.441-.441-1.156 0-1.597s1.156-.441 1.597 0l13.976 13.976z"></path><path fill="currentColor" d="M15.201 15.201c.441-.441 1.156-.441 1.597 0s.441 1.156 0 1.597L2.822 30.774c-.441.441-1.156.441-1.597 0s-.441-1.156 0-1.597l13.976-13.976z"></path></svg>
+          </h3>
+          <p class="card_design_title">{{ block.settings.design_title }}</p>
+        </a>
+      {% endfor %}
+
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Abz Home Collections",
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Collection Card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "text",
+          "id": "design_title",
+          "label": "Design Title"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Abz Home Collections",
+      "blocks": [
+        {
+          "type": "card"
+        },
+        {
+          "type": "card"
+        },
+        {
+          "type": "card"
+        },
+        {
+          "type": "card"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,51 @@
+<script>
+  window.tamaraWidgetConfig = {
+    lang: "{{ request.locale.iso_code }}",
+    country: "AE",
+    publicKey: "ae1401fd-9666-4daa-bf04-7d31bb09c4d0",
+     css : `:host {
+    --font-primary: inherit !important;
+    --font-secondary: inherit !important;
+}
+.tamara-summary-widget__amount {
+  font-weight: 700 !important;
+}
+.tamara-summary-widget__container {
+max-width: 470px;
+}
+`,
+    style: {
+        fontSize: '14px',
+        badgeRatio: 1.2,
+    }
+  }
+</script>
+<script defer type="text/javascript" src="https://cdn.tamara.co/widget-v2/tamara-widget.js"></script>
+<div>
+  <tamara-widget id="tamara-widget-custom" type="tamara-summary" amount="{{product.price | money_without_currency | remove: ','}}" config='{"badgePosition":"right","showExtraContent":""}' inline-type="2">
+  </tamara-widget>
+</div>
+
+<script>  
+function changePriceListener() {
+  var amounts = $('.price-container .price-area .current-price').text()
+  var amount = amounts.trim().replace(',', '').split(' ')
+  var amount = amount[0]
+  document.getElementById('tamara-widget-custom').setAttribute('amount', amount)
+  window.TamaraWidgetV2.refresh()
+  $('.option-selector__btns label').on('click', function () {
+    setTimeout(function () {
+      var amounts = $('.price-container .price-area .current-price').text()
+      var amount = amounts.trim().replace(',', '').split(' ')
+      var amount = amount[0]
+      document
+        .getElementById('tamara-widget-custom')
+        .setAttribute('amount', amount)
+      window.TamaraWidgetV2.refresh()
+    }, 1000)
+  })
+}
+window.addEventListener('load', (event) => {
+  setTimeout(changePriceListener, 1000)
+})
+</script>

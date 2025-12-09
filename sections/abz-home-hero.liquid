@@ -1,0 +1,52 @@
+<section class="home-hero">
+  {% if section.settings.desktop_image != blank %}
+    <picture>
+      {% if section.settings.mobile_image != blank %}
+        <source media="(max-width: 768px)" srcset="{{ section.settings.mobile_image | image_url: width: 800 }}">
+      {% endif %}
+      <img src="{{ section.settings.desktop_image | image_url: width: 2000 }}" alt="{{ section.settings.heading }}">
+    </picture>
+  {% endif %}
+
+  <div class="hero-content">
+    {% if section.settings.heading != blank %}
+      <h1>{{ section.settings.heading }}</h1>
+    {% endif %}
+    {% if section.settings.subheading != blank %}
+      <p>{{ section.settings.subheading }}</p>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Abz Home Hero",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "desktop_image",
+      "label": "Desktop Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile Image"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Sub Heading"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Abz Home Hero"
+    }
+  ]
+}
+{% endschema %}

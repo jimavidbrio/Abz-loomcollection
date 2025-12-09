@@ -1,0 +1,381 @@
+<!doctype html>
+{%- liquid
+  assign rtl_langs = 'ar,arc,dv,fa,ha,he,khw,ks,ku,ps,ur,yi' | split: ','
+  assign current_lang = localization.language.iso_code | split: '-' | first
+  if rtl_langs contains current_lang
+    assign lang_dir = 'rtl'
+  else
+    assign lang_dir = 'ltr'
+  endif
+-%}
+<html lang="{{ request.locale.iso_code }}" dir="{{ lang_dir }}">
+  <head>
+    <!-- Symmetry 6.0.0 -->
+
+    <title>
+      {{ page_title }}
+      {% if current_tags -%}
+        {%- assign meta_tags = current_tags | join: ', ' %} &ndash; {{ 'general.meta.tags' | t: tags: meta_tags -}}
+      {%- endif %}
+      {% if current_page != 1 %} &ndash; {{ 'general.meta.page' | t: page: current_page }}{% endif %}
+      {% unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless %}
+    </title>
+
+    {% if template contains 'search' %}
+  <meta name="robots" content="noindex, follow">
+{% endif %}
+
+    {% render 'head-tag' %}
+
+    {%- liquid
+      assign base_font = settings.type_base_font
+      assign base_font_bold = base_font | font_modify: 'weight', 'bolder'
+      assign base_font_medium = base_font | font_modify: 'weight', '500'
+      assign base_font_italic = base_font | font_modify: 'style', 'italic'
+      assign base_font_bold_italic = base_font_bold | font_modify: 'style', 'italic'
+      assign heading_font = settings.type_heading_font
+      assign logo_font = settings.type_logo_font
+      assign nav_font = settings.type_nav_font
+      assign nav_font_600 = nav_font | font_modify: 'weight', '600'
+    -%}
+
+    <style>
+      {{ base_font | font_face: font_display: 'fallback' }}
+      {{ base_font_bold | font_face: font_display: 'fallback' }}
+      {{ base_font_medium | font_face: font_display: 'fallback' }}
+      {{ base_font_italic | font_face: font_display: 'fallback' }}
+      {{ base_font_bold_italic | font_face: font_display: 'fallback' }}
+      {{ heading_font | font_face: font_display: 'fallback' }}
+      {{ logo_font | font_face: font_display: 'fallback' }}
+      {{ nav_font | font_face: font_display: 'fallback' }}
+      {{ nav_font_600 | font_face: font_display: 'fallback' }}
+    </style>
+
+    {% render 'social-meta-tags' %}
+
+    {{ 'styles.css' | asset_url | stylesheet_tag: preload: true }}
+    {{ 'abz_custom.css' | asset_url | stylesheet_tag: preload: true }}
+
+    {%- if settings.custom_theme_css != blank -%}
+      {{ 'custom.css' | asset_url | stylesheet_tag: preload: true }}
+    {%- endif -%}
+
+    {%- if settings.swatch_enabled and settings.swatch_value_list != blank -%}
+      <link rel="stylesheet" href="{{ 'swatches.css' | asset_url }}" media="print" onload="this.media='all'">
+      <noscript><link rel="stylesheet" href="{{ 'swatches.css' | asset_url }}"></noscript>
+    {%- endif -%}
+
+    <script>
+      window.theme = window.theme || {};
+      theme.money_format_with_product_code_preference = {% if settings.product_currency_code_enabled %}{{ shop.money_with_currency_format | json }}{% else %}{{ shop.money_format | json }}{% endif %};
+      theme.money_format_with_cart_code_preference = {% if settings.cart_currency_code_enabled %}{{ shop.money_with_currency_format | json }}{% else %}{{ shop.money_format | json }}{% endif %};
+      theme.money_format = {{ shop.money_format | json }};
+      theme.strings = {
+        previous: {{ 'general.accessibility_labels.previous' | t | json }},
+        next: {{ 'general.accessibility_labels.next' | t | json }},
+        addressError: {{ 'map.errors.address_error' | t | json }},
+        addressNoResults: {{ 'map.errors.address_no_results' | t | json }},
+        addressQueryLimit: {{ 'map.errors.address_query_limit_html' | t | json }},
+        authError: {{ 'map.errors.auth_error' | t | json }},
+        icon_labels_left: {{ 'general.icon_labels.left' | t | escape | json }},
+        icon_labels_right: {{ 'general.icon_labels.right' | t | escape | json }},
+        icon_labels_down: {{ 'general.icon_labels.down' | t | escape | json }},
+        icon_labels_close: {{ 'general.icon_labels.close' | t | escape | json }},
+        icon_labels_plus: {{ 'general.icon_labels.plus' | t | escape | json }},
+        imageSlider: {{ 'general.slider.images' | t | json }},
+        cart_terms_confirmation: {{ 'cart.terms.confirmation' | t | json }},
+        cart_general_quantity_too_high: {{ 'cart.general.quantity_too_high' | t: quantity: '[QUANTITY]' | json }},
+        products_listing_from: {{ 'products.listing.from' | t | json }},
+        layout_live_search_see_all: {{ 'layout.live_search.see_all' | t | json }},
+        products_product_add_to_cart: {{ 'products.product.add_to_cart' | t | json }},
+        products_variant_no_stock: {{ 'products.variant.no_stock' | t | json }},
+        products_variant_non_existent: {{ 'products.variant.non_existent' | t | json }},
+        products_product_pick_a: {{ 'products.product.pick_a' | t | json }},
+        general_navigation_menu_toggle_aria_label: {{ 'general.navigation.menu_toggle_aria_label' | t | json }},
+        general_accessibility_labels_close: {{ 'general.accessibility_labels.close' | t | json }},
+        products_product_added_to_cart: {{ 'products.product.added_to_cart' | t | json }},
+        general_quick_search_pages: {{ 'general.quick_search.pages' | t | json }},
+        general_quick_search_no_results: {{ 'general.quick_search.no_results' | t | json }},
+        collections_general_see_all_subcollections: {{ 'collections.general.see_all_subcollections' | t | json }}
+      };
+      theme.routes = {
+        cart_url: '{{ routes.cart_url }}',
+        cart_add_url: '{{ routes.cart_add_url }}.js',
+        cart_update_url: '{{ routes.cart_update_url }}.js',
+        predictive_search_url: '{{ routes.predictive_search_url }}'
+      };
+      theme.settings = {
+        cart_type: {{ settings.cart_type | json }},
+        after_add_to_cart: {{ settings.after_add_to_cart | json }},
+        quickbuy_style: {{ settings.quickbuy_style | json }},
+        avoid_orphans: {{ settings.avoid_orphans | json }}
+      };
+      document.documentElement.classList.add('js');
+    </script>
+
+    <script src="{{ 'vendor.min.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'theme.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'timesact.js' | asset_url }}" defer="defer"></script>
+
+    {% comment %} {%- if tinyscript -%}{{ content_for_header }}{%- else -%}{% render 'tiny-script-control' %}{%- endif -%} {% endcomment %}
+
+{% capture cfh %}
+{%- if tinyscript -%}{{ content_for_header }}{%- else -%}{% render 'tiny-script-control' %}{%- endif -%}
+{% endcapture %}
+{% assign clnurl = canonical_url | split: "?" | first | remove: shop.secure_url | join | string %}
+{% assign atomurl = '<link rel="alternate" type="application/atom+xml" title="Feed" href="' | append: clnurl | append: '.atom" />' %}
+{% if cfh contains "application/atom+xml" %} 
+  <!-- {{ atomurl | string }} -->
+{% endif %}
+{{ cfh | remove: atomurl }}
+
+    {% render 'gsf-conversion-pixels' %}
+
+    {%- comment -%}
+Dynamically outputs self-referencing hreflang for the current page.
+This works for products, collections, blogs, and all other page types.
+{%- endcomment -%}
+
+{%- if localization.country.iso_code and request.locale.iso_code -%}
+  {%- assign current_locale = request.locale.iso_code | replace: '_', '-' | append: '-' | append: localization.country.iso_code -%}
+{%- else -%}
+  {%- assign current_locale = request.locale.iso_code | replace: '_', '-' -%}
+{%- endif -%}
+
+<link rel="alternate" hreflang="{{ current_locale }}" href="{{ canonical_url }}" />
+
+
+  </head>
+
+  <body
+    class="
+      template-{{ template | split: '.' | first | handle }}
+      {%- if template.suffix %} template-suffix-{{ template.suffix }}{% endif -%}
+      {%- if settings.swatch_enabled %} swatch-method-{{ settings.swatch_method }} swatch-style-{{ settings.swatch_style }}{% endif -%}
+    "
+    data-cc-animate-timeout="0"
+  >
+    <a class="skip-link visually-hidden" href="#content">{{ 'general.accessibility_labels.skip_to_content' | t }}</a>
+
+    {% unless template.name == 'cart' or settings.cart_type == 'page' %}{% section 'cart-drawer' %}{% endunless %}
+    {% section 'announcement-bar' %}
+    {% section 'header' %}
+    {% section 'store-messages' %}
+
+    <main id="content" role="main">
+      <div class="container cf">
+        {{ content_for_layout }}
+      </div>
+      <!-- /.container -->
+    </main>
+    <!-- /#content -->
+
+    {%- if request.path != '/challenge' -%}
+      <div id="pagefooter">
+        {% section 'cross-page-promos' %}
+        {% section 'footer' %}
+      </div>
+
+      {% section 'popup' %}
+    {%- endif -%}
+
+    {%- if settings.after_add_to_cart == 'notification' -%}
+      <template id="AddedNotification">
+        <added-notification class="added-notification added-notification--hidden">
+          <div class="added-notification__message-area">
+            <div class="added-notification__message-title"></div>
+            <div class="added-notification__message-text underline-child">
+              {{ 'products.product.added_to_cart_with_link_html' | t: cart_url: routes.cart_url }}
+            </div>
+          </div>
+          <div class="added-notification__button-area">
+            <button
+              type="button"
+              class="added-notification__close notabutton"
+              aria-label="{{ 'general.accessibility_labels.close' | t | escape }}"
+            >
+              {%- render 'svg-x' -%}
+            </button>
+          </div>
+        </added-notification>
+      </template>
+    {%- endif -%}
+
+    {% include 'swymSnippet' %}
+    {% include 'swym-custom' %}
+
+    {% if template.name == 'collection' %}
+      <style>
+        .wpd-processed:has(.wpd-ext-compare-at-price) {
+          display: flex;
+          flex-direction: column-reverse;
+          align-items: baseline;
+          .wpd-ext-compare-at-price {
+            text-decoration: none !important;
+            color: #717171 !important;
+            &::before {
+              content: 'Retail ';
+            }
+          }
+        }
+        .product-info:has(.wpd-processed) {
+          .product-block__title, .product-price {
+            text-align: left;
+            justify-content: left;
+          }
+        }
+      </style>
+    {% endif %}
+    <style>
+      .quantity.buttoned-input #updates_dec_1 svg {
+        pointer-events: none !important;
+      }
+    </style>
+<style>
+.product-block .image-label-wrap .rimage-background {
+  background-color: #f3f3eb;
+}
+{% comment %} .product-block .rimage-wrapper .rimage__image, .filters-adjacent.collection-listing .product-block .rimage-wrapper .rimage__image {
+    background-color: #f3f3eb;
+} {% endcomment %}
+</style>
+  <!-- WPD Start -->
+                {% if customer.tags.size > 0 and template != 'cart' %}
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                      let checkoutbtninterval = setInterval(function(){
+                        var x=document.querySelectorAll("input[name='checkout'], button[name='checkout'], input[name='goto_pp'], button[name='goto_pp'], input[name='goto_gc'], button[name='goto_gc'], [href$='checkout']");
+                        var WPD_RedirectToCart = function(e) {
+                          	e.stopPropagation();
+                            e.preventDefault();
+                            window.location = '/cart';
+                            };
+                            for (var i = 0; i < x.length; i++) {
+                                x[i].addEventListener('click', WPD_RedirectToCart, false);
+                            }
+                        },500)
+                });
+              </script>
+               {% endif %}
+         
+
+               {% if customer.tags.size > 0 and template == 'cart' %}
+                 {% include 'wcp_cart' %}
+               {% endif %}
+               <!-- WPD End -->
+               <script>
+document.addEventListener("DOMContentLoaded", function() {
+  const newSVG = `
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5.75879 1.61475C5.26471 1.61475 4.79165 1.81781 4.44336 2.17822C4.09523 2.53851 3.90039 3.02659 3.90039 3.53467V21.0708C3.90039 22.0564 4.91893 22.6986 5.77148 22.229L11.4971 19.0747C11.652 18.9893 11.8249 18.9448 12 18.9448C12.1751 18.9448 12.348 18.9893 12.5029 19.0747L18.2285 22.229C19.081 22.6989 20.0994 22.0564 20.0996 21.0708V3.53467C20.0996 3.02655 19.9048 2.53852 19.5566 2.17822C19.2084 1.81785 18.7353 1.61475 18.2412 1.61475H5.75879ZM18.2412 2.7251C18.4467 2.7251 18.6446 2.80902 18.791 2.96045C18.9376 3.1121 19.0205 3.31877 19.0205 3.53467V21.0708C19.0205 21.1064 19.0119 21.1417 18.9951 21.1724C18.9784 21.2029 18.9541 21.2279 18.9258 21.2456C18.8973 21.2633 18.8647 21.2731 18.832 21.2739C18.7995 21.2747 18.7674 21.2665 18.7383 21.2505L13.0127 18.0962C12.7012 17.9245 12.3533 17.8345 12 17.8345C11.6467 17.8345 11.2988 17.9245 10.9873 18.0962L5.26172 21.2505C5.23263 21.2665 5.20047 21.2747 5.16797 21.2739C5.1353 21.2731 5.10267 21.2633 5.07422 21.2456C5.04585 21.2279 5.02165 21.2029 5.00488 21.1724C4.98812 21.1417 4.97953 21.1064 4.97949 21.0708V3.53467C4.97949 3.31877 5.06243 3.1121 5.20898 2.96045C5.35541 2.80903 5.5533 2.7251 5.75879 2.7251H18.2412Z" fill="black" stroke="black" stroke-width="0.2"/>
+          </svg>
+  `;
+
+  function replaceWishlistSVG(root = document.body) {
+    const svgs = root.querySelectorAll('svg');
+    svgs.forEach(svg => {
+      const path = svg.querySelector('path');
+      if (path && path.getAttribute('d') === 'M2.04363 2.00013C4.54368 -0.499876 7.71029 2.33346 8.54363 3.50012C9.21029 2.00012 12.5437 0.500119 14.5437 2.00013C18.6166 5.05486 12.5437 12.0001 8.54363 14.0001C4.04367 11.5001 -1.29179 5.3355 2.04363 2.00013Z') {
+        const wrapper = document.createElement('span');
+        wrapper.innerHTML = newSVG;
+        svg.replaceWith(wrapper.firstElementChild);
+      }
+    });
+  }
+
+  replaceWishlistSVG();
+  const observer = new MutationObserver(mutations => {
+    for (const mutation of mutations) {
+      mutation.addedNodes.forEach(node => {
+        if (node.nodeType === 1) replaceWishlistSVG(node);
+      });
+    }
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
+
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  function replaceWishlistText(root = document.body) {
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+
+    let node;
+    while (node = walker.nextNode()) {
+      if (node.nodeValue.includes("Wishlist")) {
+        node.nodeValue = node.nodeValue.replace(/Wishlist/g, "My Projects");
+      }
+    }
+  }
+
+  // Run once
+  replaceWishlistText();
+
+  // For dynamically added content
+  const observer = new MutationObserver(mutations => {
+    for (const mutation of mutations) {
+      mutation.addedNodes.forEach(node => {
+        if (node.nodeType === 1) {
+          replaceWishlistText(node);
+        }
+      });
+    }
+  });
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
+
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  function replaceMoveToCart(root = document.body) {
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+
+    let node;
+    while (node = walker.nextNode()) {
+
+      // If text contains "Move to Cart"
+      if (node.nodeValue.includes("Move to Cart")) {
+
+        // Remove any + signs (normal or unicode variants)
+        node.nodeValue = node.nodeValue
+          .replace(/Move to Cart\s*\+?/g, "Move to Cart")
+          .replace(/\s{2,}/g, " ") // clean extra spaces
+          .trim();
+      }
+    }
+  }
+
+  // Run once on page load
+  replaceMoveToCart();
+
+  // Run again for elements loaded later (AJAX/SPA/Apps)
+  const observer = new MutationObserver(mutations => {
+    for (const mutation of mutations) {
+      mutation.addedNodes.forEach(node => {
+        if (node.nodeType === 1) {
+          replaceMoveToCart(node);
+        }
+      });
+    }
+  });
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
+
+});
+</script>
+
+  </body>
+  <script
+src='//uae.fw-cdn.com/40248681/154242.js'
+chat='true'>
+</script>
+</html>
