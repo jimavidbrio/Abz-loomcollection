@@ -51,7 +51,7 @@
             "text": "<p>Rounded forms, refined textures and a hushed palette for considered spaces<br/></p>",
             "enlarge_text": true,
             "button_label_1": "Shop New Arrivals",
-            "button_url_1": "shopify://collections/new",
+            "button_url_1": "shopify://collections/new-arrivals",
             "button_label_2": "",
             "button_url_2": "",
             "text_alignment": "top right"
@@ -63,7 +63,7 @@
           "settings": {
             "image": "shopify://shop_images/The_Loom_Collection_Nov_2024_Home_Page_1950x_254ff400-2170-4731-a197-362d556a0261.png",
             "mobile_image": "shopify://shop_images/The_Loom_Collection_Nov_2024_Mobile_Page_900x_99545d18-3b93-4991-9e7a-4d08111a5e40.png",
-            "slide_link": "shopify://collections/new",
+            "slide_link": "shopify://collections/new-arrivals",
             "subheading": "Modern Craft with a",
             "title": "Contemporary Touch",
             "heading_max_width": 800,
@@ -102,7 +102,7 @@
       "type": "featured-collection",
       "settings": {
         "title": "New Arrivals",
-        "collection": "new",
+        "collection": "new-arrivals",
         "show_vendor": false,
         "enable_carousel": true,
         "grid": 4,
