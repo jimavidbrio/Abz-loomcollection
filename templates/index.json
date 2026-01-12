@@ -177,7 +177,7 @@
             "subheading": "",
             "title": "Bedroom",
             "button_label": "View More",
-            "link": "shopify://collections/bedroom",
+            "link": "shopify://collections/bedroom-furniture",
             "text_alignment": "bottom left"
           }
         },
@@ -236,7 +236,7 @@
         "77505030-f204-40a2-8756-be7df22a67d0": {
           "type": "collection",
           "settings": {
-            "collection": "bedroom"
+            "collection": "bedroom-furniture"
           }
         },
         "b28e5555-6956-4b2e-8464-d588d2360ebe": {
